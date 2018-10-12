@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { RootState } from '../module';
 
 interface PropTypes {
@@ -12,6 +13,10 @@ const Top: React.SFC<PropTypes> = (props) => {
     <div>
       <h1>{appName}</h1>
       <p>いけいけメモアプリだと思って開発してたら、HackMdの存在を知ってしまった残念メモアプリ</p>
+      <ul>
+        <li><Link to='/memos'>Memos</Link></li>
+        <li><Link to='/memos/new'>Create Memo</Link></li>
+      </ul>
     </div>
   );
 };
