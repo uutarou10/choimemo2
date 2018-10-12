@@ -1,15 +1,35 @@
+import { ActionType, createAction } from 'typesafe-actions';
+
 enum ActionTypes {
-  DUMMY = 'DUMMY'
+  APP_LOADED = 'APP_LOADED'
 }
+
+export const appLoaded = createAction(ActionTypes.APP_LOADED, resolve => (
+  () => resolve()
+));
 
 export interface StateType {
   appName: string;
+  isAppLoaded: boolean;
 }
 
 const defaultState: StateType = {
-  appName: 'Choimemo'
+  appName: 'Choimemo',
+  isAppLoaded: false
 };
 
-export default (state: StateType = defaultState, action: ActionTypes) => {
-  return state;
+type Actions = ActionType<
+  typeof appLoaded
+>;
+
+export default (state: StateType = defaultState, action: Actions) => {
+  switch (action.type) {
+    case ActionTypes.APP_LOADED:
+      return {
+        ...state,
+        isAppLoaded: true
+      };
+    default:
+      return state;
+  }
 };
