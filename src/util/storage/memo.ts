@@ -40,6 +40,26 @@ export default {
     return result;
   },
 
+  create: async (
+    autherId: string,
+    title: string,
+    body: string,
+    isPublic: boolean,
+    attachments: string[]
+  ): Promise<Memo> => {
+    const docRef = await db.collection(COLLECTION_NAME).add({
+      autherId,
+      title,
+      body,
+      isPublic,
+      attachments,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    return createMemoByDocRef(docRef);
+  },
+
   update: async (memo: Memo): Promise<Memo> => {
     const docRef = db.collection(COLLECTION_NAME).doc(memo.id);
     await docRef.update({
