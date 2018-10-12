@@ -6,11 +6,11 @@ enum ActionTypes {
   USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 }
 
-const userLoggedIn = createAction(ActionTypes.USER_LOGGED_IN, resolve => (
+export const userLoggedIn = createAction(ActionTypes.USER_LOGGED_IN, resolve => (
   (user: User) => resolve(user)
 ));
 
-const userLoggedOut = createAction(ActionTypes.USER_LOGGED_OUT, resolve => (
+export const userLoggedOut = createAction(ActionTypes.USER_LOGGED_OUT, resolve => (
   () => resolve()
 ));
 
