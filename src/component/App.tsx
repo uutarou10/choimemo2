@@ -6,6 +6,7 @@ import { appLoaded } from '../module/common';
 import { userLoggedIn, userLoggedOut } from '../module/user';
 import store, { history } from '../store';
 import { auth } from '../util/firebase';
+import MemoList from './MemoList';
 import RenderBlocker from './RenderBlocker';
 import Top from './Top';
 
@@ -26,6 +27,7 @@ class App extends React.Component {
         <ConnectedRouter history={history}>
           <RenderBlocker>
             <Route exact={true} path="/" component={Top} />
+            <Route path='/memos' component={MemoList} />
           </RenderBlocker>
         </ConnectedRouter>
       </Provider>
