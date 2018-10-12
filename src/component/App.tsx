@@ -1,13 +1,14 @@
 import { ConnectedRouter } from 'connected-react-router';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { Route } from 'react-router';
+import { Route, Switch } from 'react-router';
 import { appLoaded } from '../module/common';
 import { userLoggedIn, userLoggedOut } from '../module/user';
 import store, { history } from '../store';
 import { auth } from '../util/firebase';
+import Memo from './Memo';
 import MemoList from './MemoList';
-import RenderBlocker from './RenderBlocker';
+// import RenderBlocker from './RenderBlocker';
 import Top from './Top';
 
 auth.onAuthStateChanged(user => {
@@ -25,10 +26,13 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <RenderBlocker>
-            <Route exact={true} path="/" component={Top} />
-            <Route path='/memos' component={MemoList} />
-          </RenderBlocker>
+          {/* <RenderBlocker> */}
+            <Switch>
+              <Route exact={true} path="/" component={Top} />
+              <Route exact={true} path='/memos' component={MemoList} />
+              <Route exact={true} path='/memos/:id' component={Memo} />
+            </Switch>
+          {/* </RenderBlocker> */}
         </ConnectedRouter>
       </Provider>
     );

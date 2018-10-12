@@ -17,7 +17,9 @@ class MemoList extends React.Component<PropTypes> {
   }
 
   public componentDidMount() {
-    this.props.fetchMemoList();
+    if (this.props.memos.length === 0) {
+      this.props.fetchMemoList();
+    }
   }
 
   public render() {
