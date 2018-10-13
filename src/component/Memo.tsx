@@ -26,6 +26,10 @@ class Memo extends React.Component<PropTypes> {
       isFetching,
     } = this.props;
 
+    if (isFetching) {
+      return <div/>;
+    }
+
     if (memo) {
       return (
         <div>
@@ -36,11 +40,7 @@ class Memo extends React.Component<PropTypes> {
         </div>
       );
     } else {
-      if (isFetching) {
-        return <p>Loading...</p>;
-      } else {
-        return <p>not found...</p>;
-      }
+      return <p>not found...</p>;
     }
   }
 }
