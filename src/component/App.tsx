@@ -33,6 +33,7 @@ class App extends React.Component {
               <Route exact={true} path='/memos' component={MemoList} />
               <Route exact={true} path='/memos/new' component={MemoEditor} />
               <Route exact={true} path='/memos/:id' component={Memo} />
+              <Route exact={true} path='/memos/:id/edit' component={MemoEditor} />
             </Switch>
           {/* </RenderBlocker> */}
         </ConnectedRouter>
@@ -42,3 +43,4 @@ class App extends React.Component {
 }
 
 export default App;
+

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { createMemo } from 'src/module/memo';
 
-interface PropTypes extends RouteComponentProps {
+interface PropTypes extends RouteComponentProps<{id?: string}> {
   createMemo: (
     autherId: string,
     title: string,
@@ -25,6 +25,15 @@ class MemoEditor extends React.Component<PropTypes, StateTypes> {
       title: '',
       body: ''
     };
+  }
+
+  public componentDidMount() {
+    if (this.props.match.params.id) {
+      // メモの更新の場合
+      
+    } else {
+      // 新規作成の場合
+    }
   }
 
   public render() {

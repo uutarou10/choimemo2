@@ -1,3 +1,4 @@
+import { replace } from 'connected-react-router';
 import { Dispatch } from 'redux';
 import { ActionType, createAction } from 'typesafe-actions';
 import { Memo } from '../model/memo';
@@ -62,7 +63,9 @@ export const createMemo = (
         isPublic,
         attachments
       );
-      return dispatch(finishCreateMemo(memo));
+      dispatch(finishCreateMemo(memo));
+      dispatch(replace(`/memos/${memo.id}/edit`));
+      return;
   } catch (e) {
     return dispatch(failureCreateMemo(e));
   }
