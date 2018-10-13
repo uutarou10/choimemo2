@@ -7,6 +7,7 @@ import { userLoggedIn, userLoggedOut } from '../module/user';
 import store, { history } from '../store';
 import { auth } from '../util/firebase';
 import Memo from './Memo';
+import MemoEditor from './MemoEditor';
 import MemoList from './MemoList';
 // import RenderBlocker from './RenderBlocker';
 import Top from './Top';
@@ -30,6 +31,7 @@ class App extends React.Component {
             <Switch>
               <Route exact={true} path="/" component={Top} />
               <Route exact={true} path='/memos' component={MemoList} />
+              <Route exact={true} path='/memos/new' component={MemoEditor} />
               <Route exact={true} path='/memos/:id' component={Memo} />
             </Switch>
           {/* </RenderBlocker> */}
