@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
+import { Button, Form, Input, TextArea } from 'semantic-ui-react';
 import { createMemo } from 'src/module/memo';
 
 interface PropTypes extends RouteComponentProps<{id?: string}> {
@@ -40,23 +41,26 @@ class MemoEditor extends React.Component<PropTypes, StateTypes> {
     return (
       <div>
         <div>
-          <label>Title</label>
-          <input
-            type='text'
-            name='title'
+          <Input
             onChange={this.onTitleChangeHandler}
+            value={this.state.title}
+            placeholder='Title'
+            fluid={true}
           />
         </div>
         <div>
-          <label>body</label>
-          <textarea
-            name='body'
-            onChange={this.onBodyChangeHandler}
-          />
+          <Form>
+            <TextArea
+              onChange={this.onBodyChangeHandler}
+              placeholder='Body'
+              fluid={true}
+            />
+          </Form>
         </div>
-        <button
+        <Button
           onClick={this.onSubmitHandler}
-        >作成</button>
+          primary={true}
+        >作成</Button>
       </div>
     );
   }
