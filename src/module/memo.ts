@@ -10,7 +10,10 @@ enum ActionTypes {
   FAILURE_FETCH_MEMO = 'FAILURE_FETCH_MEMO',
   START_CREATE_MEMO = 'START_CREATE_MEMO',
   FINISH_CREATE_MEMO = 'START_CREATE_MEMO',
-  FAILURE_CREATE_MEMO = 'FAILURE_CREATE_MEMO'
+  FAILURE_CREATE_MEMO = 'FAILURE_CREATE_MEMO',
+
+  EDIT_DRAFT_TITLE = 'EDIT_DRAFT_TITLE',
+  EDIT_DRAFT_BODY = 'EDIT_DRAFT_BODY'
 }
 
 const startFetchMemo = createAction(ActionTypes.START_FETCH_MEMO, resolve => (
@@ -35,6 +38,14 @@ const finishCreateMemo = createAction(ActionTypes.FINISH_CREATE_MEMO, resolve =>
 
 const failureCreateMemo = createAction(ActionTypes.FAILURE_CREATE_MEMO, resolve => (
   (error: string) => resolve(error)
+));
+
+export const editDraftTitle = createAction(ActionTypes.EDIT_DRAFT_TITLE, resolve => (
+  (title: string) => resolve(title)
+));
+
+export const editDraftBody = createAction(ActionTypes.EDIT_DRAFT_BODY, resolve => (
+  (body: string) => resolve(body)
 ));
 
 export const fetchMemo = (id: string) => (async (dispatch: Dispatch) => {
@@ -75,18 +86,24 @@ interface StateType {
   memo: Memo | null;
   isFetching: boolean;
   error: string | null;
+  draftTitle: string;
+  draftBody: string;
 }
 
 const defaultState: StateType = {
   memo: null,
   isFetching: false,
-  error: null
+  error: null,
+  draftTitle: '',
+  draftBody: ''
 };
 
 type Actions = ActionType<
   typeof startFetchMemo |
   typeof finishFetchMemo |
-  typeof failureFetchMemo
+  typeof failureFetchMemo |
+  typeof editDraftTitle |
+  typeof editDraftBody
 >;
 
 export default (state: StateType = defaultState, action: Actions) => {
@@ -109,6 +126,18 @@ export default (state: StateType = defaultState, action: Actions) => {
         ...state,
         error: action.payload,
         isFetching: false
+      };
+
+    case ActionTypes.EDIT_DRAFT_TITLE:
+      return {
+        ...state,
+        draftTitle: action.payload
+      };
+
+    case ActionTypes.EDIT_DRAFT_BODY:
+      return {
+        ...state,
+        draftBody: action.payload
       };
 
     default:
