@@ -9,7 +9,6 @@ import { auth } from '../util/firebase';
 import Memo from './Memo';
 import MemoEditor from './MemoEditor';
 import MemoList from './MemoList';
-// import RenderBlocker from './RenderBlocker';
 import Top from './Top';
 
 auth.onAuthStateChanged(user => {
@@ -27,15 +26,13 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          {/* <RenderBlocker> */}
-            <Switch>
-              <Route exact={true} path="/" component={Top} />
-              <Route exact={true} path='/memos' component={MemoList} />
-              <Route exact={true} path='/memos/new' component={MemoEditor} />
-              <Route exact={true} path='/memos/:id' component={Memo} />
-              <Route exact={true} path='/memos/:id/edit' component={MemoEditor} />
-            </Switch>
-          {/* </RenderBlocker> */}
+          <Switch>
+            <Route exact={true} path="/" component={Top} />
+            <Route exact={true} path='/memos' component={MemoList} />
+            <Route exact={true} path='/memos/new' component={MemoEditor} />
+            <Route exact={true} path='/memos/:id' component={Memo} />
+            <Route exact={true} path='/memos/:id/edit' component={MemoEditor} />
+          </Switch>
         </ConnectedRouter>
       </Provider>
     );
