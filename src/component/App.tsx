@@ -1,11 +1,14 @@
 import { ConnectedRouter } from 'connected-react-router';
 import * as React from 'react';
-import { Provider } from 'react-redux';
+import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
+import { Container } from 'semantic-ui-react';
+import { RootState } from 'src/module';
 import { appLoaded } from '../module/common';
 import { userLoggedIn, userLoggedOut } from '../module/user';
 import store, { history } from '../store';
 import { auth } from '../util/firebase';
+import Loader from './Loader';
 import Memo from './Memo';
 import MemoEditor from './MemoEditor';
 import MemoList from './MemoList';
@@ -21,11 +24,19 @@ auth.onAuthStateChanged(user => {
   store.dispatch(appLoaded());
 });
 
-class App extends React.Component {
+interface PropTypes {
+  isAppLoaded: boolean;
+}
+
+export class _App extends React.Component<PropTypes> {
   public render() {
+    if (!this.props.isAppLoaded) {
+      return <Loader />;
+    }
+
     return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
+      <ConnectedRouter history={history}>
+        <Container>
           <Switch>
             <Route exact={true} path="/" component={Top} />
             <Route exact={true} path='/memos' component={MemoList} />
@@ -33,11 +44,15 @@ class App extends React.Component {
             <Route exact={true} path='/memos/:id' component={Memo} />
             <Route exact={true} path='/memos/:id/edit' component={MemoEditor} />
           </Switch>
-        </ConnectedRouter>
-      </Provider>
+        </Container>
+      </ConnectedRouter>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state: RootState) => ({
+  isAppLoaded: state.common.isAppLoaded
+});
+
+export default connect(mapStateToProps)(_App);
 
