@@ -32,8 +32,8 @@ export default {
         body,
         isPublic,
         attachments,
-        createdAt,
-        updatedAt
+        createdAt: createdAt.toDate(),
+        updatedAt: updatedAt.toDate()
       });
     });
 
@@ -100,7 +100,7 @@ const createMemoByDocRef = async (docRef: firebase.firestore.DocumentReference):
     body,
     isPublic,
     attachments,
-    createdAt,
-    updatedAt
+    createdAt: createdAt.toDate(),
+    updatedAt: updatedAt.toDate()
   };
 };

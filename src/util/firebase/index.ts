@@ -11,5 +11,8 @@ export const app = firebase.initializeApp({
   messagingSenderId: process.env.REACT_APP_MESSAGING_ID
 });
 
-export const db = app.firestore();
 export const auth = app.auth();
+export const db = app.firestore();
+db.settings({
+  timestampsInSnapshots: true
+});
