@@ -28,21 +28,17 @@ class MemoList extends React.Component<PropTypes> {
       memos
     } = this.props;
 
-    if (isFetching) {
-      return (
-        <div>Loading...</div>
-      );
-    }
-
     return (
       <div>
         <h2>Your memos</h2>
         <div>
-          {memos.map(memo => (
-            <li key={memo.id}>
-              <Link to={`/memos/${memo.id}`}>{memo.title} / {memo.createdAt.toLocaleTimeString()}</Link>
-           </li>
-          ))}
+          {isFetching ? (undefined) : (
+            memos.map(memo => (
+              <li key={memo.id}>
+                <Link to={`/memos/${memo.id}`}>{memo.title} / {memo.createdAt.toLocaleTimeString()}</Link>
+              </li>
+            ))
+          )}
         </div>
       </div>
     );
