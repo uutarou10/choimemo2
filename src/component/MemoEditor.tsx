@@ -17,12 +17,14 @@ interface PropTypes extends RouteComponentProps<{id?: string}> {
   ) => any;
   editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => any;
   editDraftBody: (body: React.ChangeEvent<HTMLTextAreaElement>) => any;
+  isCreating: boolean;
 }
 
 export const _MemoEditor: React.SFC<PropTypes> = (props) => {
   const {
     draftBody,
-    draftTitle
+    draftTitle,
+    isCreating
   } = props;
 
   const onSubmitHandler = () => {
@@ -43,6 +45,7 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
           value={draftTitle}
           placeholder='Title'
           fluid={true}
+          disabled={isCreating}
         />
       </div>
       <div>
@@ -52,12 +55,14 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
             value={draftBody}
             placeholder='Body'
             fluid={true}
+            disabled={isCreating}
           />
         </Form>
       </div>
       <Button
         onClick={onSubmitHandler}
         primary={true}
+        loading={isCreating}
       >作成</Button>
     </div>
   );
@@ -65,7 +70,8 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
 
 const mapStateToProps = (state: RootState) => ({
   draftTitle: state.memo.draftTitle,
-  draftBody: state.memo.draftBody
+  draftBody: state.memo.draftBody,
+  isCreating: state.memo.isCreating
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

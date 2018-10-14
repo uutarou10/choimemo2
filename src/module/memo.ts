@@ -75,7 +75,7 @@ export const createMemo = (
         attachments
       );
       dispatch(finishCreateMemo(memo));
-      dispatch(replace(`/memos/${memo.id}/edit`));
+      dispatch(replace(`/memos/${memo.id}`));
       return;
   } catch (e) {
     return dispatch(failureCreateMemo(e));
@@ -88,6 +88,7 @@ interface StateType {
   error: string | null;
   draftTitle: string;
   draftBody: string;
+  isCreating: boolean;
 }
 
 const defaultState: StateType = {
@@ -95,7 +96,8 @@ const defaultState: StateType = {
   isFetching: false,
   error: null,
   draftTitle: '',
-  draftBody: ''
+  draftBody: '',
+  isCreating: false
 };
 
 type Actions = ActionType<
@@ -103,7 +105,9 @@ type Actions = ActionType<
   typeof finishFetchMemo |
   typeof failureFetchMemo |
   typeof editDraftTitle |
-  typeof editDraftBody
+  typeof editDraftBody |
+  typeof startCreateMemo |
+  typeof finishCreateMemo
 >;
 
 export default (state: StateType = defaultState, action: Actions) => {
@@ -138,6 +142,18 @@ export default (state: StateType = defaultState, action: Actions) => {
       return {
         ...state,
         draftBody: action.payload
+      };
+
+    case ActionTypes.START_CREATE_MEMO:
+      return {
+        ...state,
+        isCreating: true
+      };
+
+    case ActionTypes.FINISH_CREATE_MEMO:
+      return {
+        ...state,
+        isCreating: false
       };
 
     default:
