@@ -24,14 +24,20 @@ jobs:
       - run: yarn build
 
   deploy:
-    machine:
-      enabled: true
+    docker:
+      - image: circleci/node:7.10
     working_directory: ~/repo
     steps:
       - checkout
+      - run: yarn
       - run:
-        name: deploy to firebase
-        command: yarn firebase deploy --token=$FIREBASE_DEPLOY_TOKEN
+          name: build
+          command: yarn build
+      - run: env
+      - run: echo ${FIREBASE_DEPLOY_TOKEN}
+      - run:
+          name: deploy to firebase
+          command: yarn firebase deploy --token "${FIREBASE_DEPLOY_TOKEN}"
 
 workflows:
   version: 2
@@ -40,8 +46,8 @@ workflows:
     jobs:
       - build
       - deploy:
-        requires:
-          - build
-        filters:
-          branches:
-            only: master
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
