@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Memo } from 'src/model/memo';
 import { RootState } from 'src/module';
 import { fetchMemoList } from 'src/module/memoList';
+import MemoListItem from'./MemoListItem';
 
 interface PropTypes {
   memos: Memo[];
@@ -33,11 +33,7 @@ class MemoList extends React.Component<PropTypes> {
         <h2>Your memos</h2>
         <div>
           {isFetching ? (undefined) : (
-            memos.map(memo => (
-              <li key={memo.id}>
-                <Link to={`/memos/${memo.id}`}>{memo.title} / {memo.createdAt.toLocaleTimeString()}</Link>
-              </li>
-            ))
+            memos.map(memo => <MemoListItem key={memo.id} memo={memo} />)
           )}
         </div>
       </div>
