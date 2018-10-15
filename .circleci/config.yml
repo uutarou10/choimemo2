@@ -29,13 +29,13 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: yarn
+      - run: npm i
       - run:
           name: build
-          command: yarn build
+          command: npm run build
       - run:
           name: deploy to firebase
-          command: TOKEN=$FIREBASE_DEPLOY_TOKEN yarn firebase deploy --token "${TOKEN}"
+          command: npx firebase deploy --token "${TOKEN}"
 
 workflows:
   version: 2
