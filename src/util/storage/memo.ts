@@ -11,7 +11,7 @@ export default {
   },
 
   getAll: async (): Promise<Memo[]> => {
-    const querySnapshot = await db.collection(COLLECTION_NAME).get();
+    const querySnapshot = await db.collection(COLLECTION_NAME).orderBy('createdAt', 'desc').get();
     const result: Memo[] = [];
     querySnapshot.forEach(memo => {
       const data: any = memo.data();
