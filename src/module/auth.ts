@@ -5,7 +5,9 @@ import { ActionType, createAction } from 'typesafe-actions';
 enum ActionTypes {
   EDIT_EMAIL = 'EDIT_EMAIL',
   EDIT_PASSWORD = 'EDIT_PASSWORD',
-  START_LOGIN_PROCESSING = 'START_LOGIN_PROCESSING'
+  START_LOGIN_PROCESSING = 'START_LOGIN_PROCESSING',
+  AUTH_ERROR = 'AUTH_ERROR',
+  CLEAR_AUTH_ERROR = 'CLEAR_AUTH_ERROR'
 }
 
 export const editEmail = createAction(ActionTypes.EDIT_EMAIL, resolve => (
@@ -20,29 +22,40 @@ const startLoginProcessing = createAction(ActionTypes.START_LOGIN_PROCESSING, re
   () => resolve()
 ));
 
+export const authError = createAction(ActionTypes.AUTH_ERROR, resolve => (
+  (error: Error) => resolve(error)
+));
+
+export const clearAuthError = createAction(ActionTypes.CLEAR_AUTH_ERROR, resolve => (
+  () => resolve()
+));
+
 // ログイン処理を行うthunk
 export const loginWithEmailAndPassword = (email: string, password: string) => (dispatch: Dispatch) =>{
   dispatch(startLoginProcessing());
-  // tslint:disable-next-line
-  auth.signInWithEmailAndPassword(email, password).catch(err => console.warn(err));
+  auth.signInWithEmailAndPassword(email, password).catch(err => dispatch(authError(err)));
 };
 
 interface StateType {
   email: string;
   password: string;
   isLoginProcessing: boolean; // ログインログアウト処理中かどうか
+  error?: Error;
 }
 
 const defaultState: StateType = {
   email: '',
   password: '',
-  isLoginProcessing: false
+  isLoginProcessing: false,
+  error: undefined
 };
 
 type Actions = ActionType<
   typeof editEmail |
   typeof editPassword |
-  typeof startLoginProcessing
+  typeof startLoginProcessing |
+  typeof authError |
+  typeof clearAuthError
 >;
 
 export default (state: StateType = defaultState, action: Actions) => {
@@ -63,6 +76,19 @@ export default (state: StateType = defaultState, action: Actions) => {
       return {
         ...state,
         isLoginProcessing: true
+      };
+
+    case ActionTypes.AUTH_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+        isLoginProcessing: false
+      };
+
+    case ActionTypes.CLEAR_AUTH_ERROR:
+      return {
+        ...state,
+        error: undefined
       };
 
     default:
