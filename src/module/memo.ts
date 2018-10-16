@@ -9,12 +9,12 @@ enum ActionTypes {
   FINISH_FETCH_MEMO = 'FINISH_FETCH_MEMO',
   FAILURE_FETCH_MEMO = 'FAILURE_FETCH_MEMO',
   START_CREATE_MEMO = 'START_CREATE_MEMO',
-  FINISH_CREATE_MEMO = 'START_CREATE_MEMO',
+  FINISH_CREATE_MEMO = 'FINISH_CREATE_MEMO',
   FAILURE_CREATE_MEMO = 'FAILURE_CREATE_MEMO',
 
   EDIT_DRAFT_TITLE = 'EDIT_DRAFT_TITLE',
   EDIT_DRAFT_BODY = 'EDIT_DRAFT_BODY',
-  TOGGLE_DRAFT_BODY = 'TOGGLE_DRAFT_BODY'
+  TOGGLE_DRAFT_PUBLIC = 'TOGGLE_DRAFT_PUBLIC'
 }
 
 const startFetchMemo = createAction(ActionTypes.START_FETCH_MEMO, resolve => (
@@ -49,7 +49,7 @@ export const editDraftBody = createAction(ActionTypes.EDIT_DRAFT_BODY, resolve =
   (body: string) => resolve(body)
 ));
 
-export const toggleDraftPublic = createAction(ActionTypes.TOGGLE_DRAFT_BODY, resolve => (
+export const toggleDraftPublic = createAction(ActionTypes.TOGGLE_DRAFT_PUBLIC, resolve => (
   () => resolve()
 ));
 
@@ -161,10 +161,13 @@ export default (state: StateType = defaultState, action: Actions) => {
     case ActionTypes.FINISH_CREATE_MEMO:
       return {
         ...state,
-        isCreating: false
+        isCreating: false,
+        draftBody: '',
+        draftIsPublic: false,
+        draftTitle: ''
       };
 
-    case ActionTypes.TOGGLE_DRAFT_BODY:
+    case ActionTypes.TOGGLE_DRAFT_PUBLIC:
       return {
         ...state,
         draftIsPublic: !state.draftIsPublic
