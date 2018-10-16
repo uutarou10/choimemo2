@@ -6,6 +6,7 @@ import User from '../model/user';
 enum ActionTypes {
   USER_LOGGED_IN = 'USER_LOGGED_IN',
   USER_LOGGED_OUT = 'USER_LOGGED_OUT',
+  START_LOGIN_PROCESSING = 'START_LOGIN_PROCESSING'
 }
 
 // ユーザーがログインした際に呼ばれるAction
@@ -18,8 +19,13 @@ export const userLoggedOut = createAction(ActionTypes.USER_LOGGED_OUT, resolve =
   () => resolve()
 ));
 
+const startLoginProcessing = createAction(ActionTypes.START_LOGIN_PROCESSING, resolve => (
+  () => resolve()
+));
+
 // ログイン処理を行うthunk
 export const loginWithEmailAndPassword = (email: string, password: string) => (dispatch: Dispatch) =>{
+  dispatch(startLoginProcessing());
   auth.signInWithEmailAndPassword(email, password);
 };
 
@@ -37,28 +43,30 @@ const defaultState: StateType = {
 
 type Actions = ActionType<
   typeof userLoggedIn |
-  typeof userLoggedOut
+  typeof userLoggedOut |
+  typeof startLoginProcessing
 >;
 
 export default (state: StateType = defaultState, action: Actions) => {
   switch (action.type) {
-    case ActionTypes.USER_LOGGED_IN:
     case ActionTypes.USER_LOGGED_OUT:
       return {
         ...state,
+        user: undefined,
         isAuthReady: true
       };
 
     case ActionTypes.USER_LOGGED_IN:
       return {
         ...state,
-        user: action.payload
+        user: action.payload,
+        isAuthReady: true
       };
 
-    case ActionTypes.USER_LOGGED_OUT:
+    case ActionTypes.START_LOGIN_PROCESSING:
       return {
         ...state,
-        user: undefined
+        isLoginProcessing: true
       };
 
     default:
