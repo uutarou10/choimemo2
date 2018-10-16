@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import { Container } from 'semantic-ui-react';
 import { RootState } from 'src/module';
-import { appLoaded } from '../module/common';
 import { userLoggedIn, userLoggedOut } from '../module/user';
 import store, { history } from '../store';
 import { auth } from '../util/firebase';
@@ -20,8 +19,6 @@ auth.onAuthStateChanged(user => {
   } else {
     store.dispatch(userLoggedOut());
   }
-
-  store.dispatch(appLoaded());
 });
 
 interface PropTypes {
@@ -51,7 +48,7 @@ export class _App extends React.Component<PropTypes> {
 }
 
 const mapStateToProps = (state: RootState) => ({
-  isAppLoaded: state.common.isAppLoaded
+  isAppLoaded: state.user.isAuthReady
 });
 
 export default connect(mapStateToProps)(_App);
