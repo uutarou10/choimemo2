@@ -8,10 +8,11 @@ import { Memo as MemoModel } from '../model/memo';
 interface PropTypes extends RouteComponentProps<{id: string}> {
   memo: MemoModel;
   isFetching: boolean;
+
   fetchMemo: (id: string) => any;
 }
 
-class Memo extends React.Component<PropTypes> {
+class _Memo extends React.Component<PropTypes> {
   constructor(props: PropTypes) {
     super(props);
   }
@@ -23,7 +24,7 @@ class Memo extends React.Component<PropTypes> {
   public render() {
     const {
       memo,
-      isFetching,
+      isFetching
     } = this.props;
 
     if (isFetching) {
@@ -54,4 +55,4 @@ const mapDispatchToProps = (dispatch: any) => ({
   fetchMemo: (id: string) => dispatch(fetchMemo(id))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Memo);
+export default connect(mapStateToProps, mapDispatchToProps)(_Memo);

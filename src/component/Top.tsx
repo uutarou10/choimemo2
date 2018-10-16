@@ -1,6 +1,8 @@
+import { push } from 'connected-react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { Dispatch } from 'redux';
 import { Button, Icon } from 'semantic-ui-react';
 import User from 'src/model/user';
 import { RootState } from '../module';
@@ -8,12 +10,14 @@ import { RootState } from '../module';
 interface PropTypes {
   appName: string;
   user?: User;
+  toLogin: () => any;
 }
 
-const Top: React.SFC<PropTypes> = (props) => {
+const _Top: React.SFC<PropTypes> = (props) => {
   const {
     appName,
-    user
+    user,
+    toLogin
   } = props;
 
   if (user) {
@@ -35,7 +39,10 @@ const Top: React.SFC<PropTypes> = (props) => {
         </ul>
       ) : (undefined)}
 
-      <Button primary={true}>ログイン</Button>
+      <Button
+        primary={true}
+        onClick={toLogin}
+      >ログイン</Button>
     </div>
   );
 };
@@ -45,4 +52,8 @@ const mapStateToProps = (state: RootState) => ({
   user: state.user.user
 });
 
-export default connect(mapStateToProps)(Top);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  toLogin: () => dispatch(push('/login'))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(_Top);

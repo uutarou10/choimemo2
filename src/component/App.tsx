@@ -9,11 +9,12 @@ import store, { history } from '../store';
 import { auth } from '../util/firebase';
 import Loader from './Loader';
 import Login from './Login';
-import Memo from './Memo';
+import _Memo from './Memo';
 import MemoEditor from './MemoEditor';
-import MemoList from './MemoList';
-import Top from './Top';
+import _MemoList from './MemoList';
+import _Top from './Top';
 
+// 認証の初期化処理(ハンドラーのセット)
 auth.onAuthStateChanged(user => {
   if (user) {
     store.dispatch(userLoggedIn({
@@ -29,28 +30,26 @@ interface PropTypes {
   isAppLoaded: boolean;
 }
 
-export class _App extends React.Component<PropTypes> {
-  public render() {
-    if (!this.props.isAppLoaded) {
-      return <Loader />;
-    }
-
-    return (
-      <ConnectedRouter history={history}>
-        <Container>
-          <Switch>
-            <Route exact={true} path="/" component={Top} />
-            <Route exact={true} path='/login' component={Login} />
-            <Route exact={true} path='/memos' component={MemoList} />
-            <Route exact={true} path='/memos/new' component={MemoEditor} />
-            <Route exact={true} path='/memos/:id' component={Memo} />
-            <Route exact={true} path='/memos/:id/edit' component={MemoEditor} />
-          </Switch>
-        </Container>
-      </ConnectedRouter>
-    );
+export const _App: React.SFC<PropTypes> = (props) => {
+  if (!props.isAppLoaded) {
+    return <Loader />;
   }
-}
+
+  return (
+    <ConnectedRouter history={history}>
+      <Container>
+        <Switch>
+          <Route exact={true} path="/" component={_Top} />
+          <Route exact={true} path='/login' component={Login} />
+          <Route exact={true} path='/memos' component={_MemoList} />
+          <Route exact={true} path='/memos/new' component={MemoEditor} />
+          <Route exact={true} path='/memos/:id' component={_Memo} />
+          <Route exact={true} path='/memos/:id/edit' component={MemoEditor} />
+        </Switch>
+      </Container>
+    </ConnectedRouter>
+  );
+};
 
 const mapStateToProps = (state: RootState) => ({
   isAppLoaded: state.user.isAuthReady

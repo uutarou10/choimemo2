@@ -10,6 +10,9 @@ interface PropTypes extends RouteComponentProps<{id?: string}> {
   draftTitle: string;
   draftBody: string;
   user?: User;
+  isCreating: boolean;
+  draftIsPublic: boolean;
+
   createMemo: (
     autherId: string,
     title: string,
@@ -20,8 +23,6 @@ interface PropTypes extends RouteComponentProps<{id?: string}> {
   editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => any;
   editDraftBody: (body: React.ChangeEvent<HTMLTextAreaElement>) => any;
   togglePublic: () => any;
-  isCreating: boolean;
-  draftIsPublic: boolean;
 }
 
 export const _MemoEditor: React.SFC<PropTypes> = (props) => {

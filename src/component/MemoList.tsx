@@ -11,11 +11,12 @@ import MemoListItem from'./MemoListItem';
 interface PropTypes {
   memos: Memo[];
   isFetching: boolean;
-  fetchMemoList: () => any;
   user?: User;
+
+  fetchMemoList: () => any;
 }
 
-class MemoList extends React.Component<PropTypes> {
+class _MemoList extends React.Component<PropTypes> {
   constructor(props: PropTypes) {
     super(props);
   }
@@ -66,4 +67,4 @@ const mapDispatchToProps = (dispatch: any) => ({
   fetchMemoList: () => dispatch(fetchMemoList())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MemoList);
+export default connect(mapStateToProps, mapDispatchToProps)(_MemoList);
