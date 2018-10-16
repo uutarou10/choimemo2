@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 import { Dimmer, Loader, Segment} from 'semantic-ui-react';
 import { Memo } from 'src/model/memo';
+import User from 'src/model/user';
 import { RootState } from 'src/module';
 import { fetchMemoList } from 'src/module/memoList';
 import MemoListItem from'./MemoListItem';
@@ -10,6 +12,7 @@ interface PropTypes {
   memos: Memo[];
   isFetching: boolean;
   fetchMemoList: () => any;
+  user?: User;
 }
 
 class MemoList extends React.Component<PropTypes> {
@@ -26,8 +29,13 @@ class MemoList extends React.Component<PropTypes> {
   public render() {
     const {
       isFetching,
-      memos
+      memos,
+      user
     } = this.props;
+
+    if (!user) {
+      return <Redirect to='/' push={false} />;
+    }
 
     return (
       <div>
@@ -50,7 +58,8 @@ class MemoList extends React.Component<PropTypes> {
 
 const mapStateToProps = (state: RootState) => ({
   memos: state.memoList.memos,
-  isFetching: state.memoList.isFetching
+  isFetching: state.memoList.isFetching,
+  user: state.user.user
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
