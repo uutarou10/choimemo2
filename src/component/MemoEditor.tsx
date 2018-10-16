@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
+import { Redirect, RouteComponentProps } from 'react-router';
 import { Button, Checkbox, Form, Input, TextArea } from 'semantic-ui-react';
+import User from 'src/model/user';
 import { RootState } from 'src/module';
 import { createMemo, editDraftBody, editDraftTitle, toggleDraftPublic } from 'src/module/memo';
 
 interface PropTypes extends RouteComponentProps<{id?: string}> {
   draftTitle: string;
   draftBody: string;
+  user?: User;
   createMemo: (
     autherId: string,
     title: string,
@@ -28,8 +30,13 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
     draftTitle,
     isCreating,
     draftIsPublic,
-    togglePublic
+    togglePublic,
+    user
   } = props;
+
+  if (!user) {
+    return <Redirect to='/' push={false} />;
+  }
 
   const onSubmitHandler = () => {
     props.createMemo(
@@ -83,7 +90,8 @@ const mapStateToProps = (state: RootState) => ({
   draftTitle: state.memo.draftTitle,
   draftBody: state.memo.draftBody,
   isCreating: state.memo.isCreating,
-  draftIsPublic: state.memo.draftIsPublic
+  draftIsPublic: state.memo.draftIsPublic,
+  user: state.user.user
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
