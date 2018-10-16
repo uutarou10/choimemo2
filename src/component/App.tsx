@@ -16,7 +16,10 @@ import Top from './Top';
 
 auth.onAuthStateChanged(user => {
   if (user) {
-    store.dispatch(userLoggedIn({email: user.email || 'No Email'}));
+    store.dispatch(userLoggedIn({
+      uid: user.uid,
+      email: user.email ? user.email : undefined
+    }));
   } else {
     store.dispatch(userLoggedOut());
   }

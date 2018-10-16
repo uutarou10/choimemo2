@@ -40,7 +40,7 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
 
   const onSubmitHandler = () => {
     props.createMemo(
-      'dummy-auhter-id',
+      user.uid,
       draftTitle,
       draftBody,
       draftIsPublic,
