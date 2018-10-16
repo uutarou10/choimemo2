@@ -1,12 +1,9 @@
-import { Dispatch } from 'redux';
-import { auth } from 'src/util/firebase';
 import { ActionType, createAction } from 'typesafe-actions';
 import User from '../model/user';
 
 enum ActionTypes {
   USER_LOGGED_IN = 'USER_LOGGED_IN',
-  USER_LOGGED_OUT = 'USER_LOGGED_OUT',
-  START_LOGIN_PROCESSING = 'START_LOGIN_PROCESSING'
+  USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 }
 
 // ユーザーがログインした際に呼ばれるAction
@@ -19,32 +16,19 @@ export const userLoggedOut = createAction(ActionTypes.USER_LOGGED_OUT, resolve =
   () => resolve()
 ));
 
-const startLoginProcessing = createAction(ActionTypes.START_LOGIN_PROCESSING, resolve => (
-  () => resolve()
-));
-
-// ログイン処理を行うthunk
-export const loginWithEmailAndPassword = (email: string, password: string) => (dispatch: Dispatch) =>{
-  dispatch(startLoginProcessing());
-  auth.signInWithEmailAndPassword(email, password);
-};
-
 interface StateType {
   user?: User; // 未ログイン状態ならundefined
   isAuthReady: boolean; // onAuthStateChangedが一度でも呼ばれているか
-  isLoginProcessing: boolean; // ログインログアウト処理中かどうか
 }
 
 const defaultState: StateType = {
   user: undefined,
   isAuthReady: false,
-  isLoginProcessing: false
 };
 
 type Actions = ActionType<
   typeof userLoggedIn |
-  typeof userLoggedOut |
-  typeof startLoginProcessing
+  typeof userLoggedOut
 >;
 
 export default (state: StateType = defaultState, action: Actions) => {
@@ -61,12 +45,6 @@ export default (state: StateType = defaultState, action: Actions) => {
         ...state,
         user: action.payload,
         isAuthReady: true
-      };
-
-    case ActionTypes.START_LOGIN_PROCESSING:
-      return {
-        ...state,
-        isLoginProcessing: true
       };
 
     default:

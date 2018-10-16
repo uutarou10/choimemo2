@@ -5,7 +5,7 @@ import { Button, Form } from 'semantic-ui-react';
 import User from 'src/model/user';
 import { RootState } from 'src/module';
 import { editEmail, editPassword } from 'src/module/auth';
-import { loginWithEmailAndPassword } from 'src/module/user';
+import { loginWithEmailAndPassword } from 'src/module/auth';
 
 type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
@@ -77,7 +77,7 @@ const _Login:React.SFC<PropTypes> = ({
 
 const mapStateToProp = (state: RootState) => ({
   user: state.user.user,
-  isLoginProcessing: state.user.isLoginProcessing,
+  isLoginProcessing: state.auth.isLoginProcessing,
   email: state.auth.email,
   password: state.auth.password
 });
