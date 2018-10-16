@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import { Container } from 'semantic-ui-react';
 import { RootState } from 'src/module';
-import { appLoaded } from '../module/common';
 import { userLoggedIn, userLoggedOut } from '../module/user';
 import store, { history } from '../store';
 import { auth } from '../util/firebase';
 import Loader from './Loader';
+import Login from './Login';
 import Memo from './Memo';
 import MemoEditor from './MemoEditor';
 import MemoList from './MemoList';
@@ -20,8 +20,6 @@ auth.onAuthStateChanged(user => {
   } else {
     store.dispatch(userLoggedOut());
   }
-
-  store.dispatch(appLoaded());
 });
 
 interface PropTypes {
@@ -39,6 +37,7 @@ export class _App extends React.Component<PropTypes> {
         <Container>
           <Switch>
             <Route exact={true} path="/" component={Top} />
+            <Route exact={true} path='/login' component={Login} />
             <Route exact={true} path='/memos' component={MemoList} />
             <Route exact={true} path='/memos/new' component={MemoEditor} />
             <Route exact={true} path='/memos/:id' component={Memo} />
@@ -51,7 +50,7 @@ export class _App extends React.Component<PropTypes> {
 }
 
 const mapStateToProps = (state: RootState) => ({
-  isAppLoaded: state.common.isAppLoaded
+  isAppLoaded: state.user.isAuthReady
 });
 
 export default connect(mapStateToProps)(_App);

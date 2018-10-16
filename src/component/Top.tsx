@@ -19,6 +19,7 @@ const Top: React.SFC<PropTypes> = (props) => {
       <ul>
         <li><Link to='/memos'>Memos</Link></li>
         <li><Link to='/memos/new'>Create Memo</Link></li>
+        <li><Link to='/login'>Login</Link></li>
       </ul>
     </div>
   );
