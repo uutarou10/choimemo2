@@ -4,7 +4,7 @@ import { Redirect, RouteComponentProps } from 'react-router';
 import { Button, Checkbox, Form, Input, TextArea } from 'semantic-ui-react';
 import User from 'src/model/user';
 import { RootState } from 'src/module';
-import { createMemo, editDraftBody, editDraftTitle, toggleDraftPublic } from 'src/module/memo';
+import { createMemo, editDraftBody, editDraftTitle, toggleDraftPublic, updateMemo } from 'src/module/memo';
 
 interface PropTypes extends RouteComponentProps<{id?: string}> {
   draftTitle: string;
@@ -14,6 +14,14 @@ interface PropTypes extends RouteComponentProps<{id?: string}> {
   draftIsPublic: boolean;
 
   createMemo: (
+    autherId: string,
+    title: string,
+    body: string,
+    isPublic: boolean,
+    attachments: string[]
+  ) => any;
+  updateMemo: (
+    id: string,
     autherId: string,
     title: string,
     body: string,
@@ -35,18 +43,31 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
     user
   } = props;
 
+  const isEditMode = !!props.match.params.id;
+
   if (!user) {
     return <Redirect to='/' push={false} />;
   }
 
   const onSubmitHandler = () => {
-    props.createMemo(
-      user.uid,
-      draftTitle,
-      draftBody,
-      draftIsPublic,
-      []
-    );
+    if (isEditMode) {
+      props.updateMemo(
+        props.match.params.id as string,
+        user.uid,
+        draftTitle,
+        draftBody,
+        draftIsPublic,
+        []
+      );
+    } else {
+      props.createMemo(
+        user.uid,
+        draftTitle,
+        draftBody,
+        draftIsPublic,
+        []
+      );
+    }
   };
 
   return (
@@ -66,7 +87,7 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
             onChange={props.editDraftBody}
             value={draftBody}
             placeholder='Body'
-            fluid={true}
+            fluid='true'
             disabled={isCreating}
           />
         </Form>
@@ -82,7 +103,7 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
         primary={true}
         loading={isCreating}
         fluid={true}
-      >作成</Button>
+      >{isEditMode ? '更新' : '作成'}</Button>
     </div>
   );
 };
@@ -103,6 +124,14 @@ const mapDispatchToProps = (dispatch: any) => ({
     isPublic: boolean,
     attachments: string[]
   ) => dispatch(createMemo(autherId, title, body, isPublic, attachments)),
+  updateMemo: (
+    id: string,
+    autherId: string,
+    title: string,
+    body: string,
+    isPublic: boolean,
+    attachments: string[]
+  ) => dispatch(updateMemo(id, autherId, title, body, isPublic, attachments)),
   editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => dispatch(editDraftTitle(event.target.value)),
   editDraftBody: (event: React.ChangeEvent<HTMLTextAreaElement>) => dispatch(editDraftBody(event.target.value)),
   togglePublic: () => dispatch(toggleDraftPublic())

@@ -60,14 +60,21 @@ export default {
     return createMemoByDocRef(docRef);
   },
 
-  update: async (memo: Memo): Promise<Memo> => {
-    const docRef = db.collection(COLLECTION_NAME).doc(memo.id);
+  update: async (
+    id: string,
+    autherId: string,
+    title: string,
+    body: string,
+    isPublic: boolean,
+    attachments: string[]
+  ): Promise<Memo> => {
+    const docRef = db.collection(COLLECTION_NAME).doc(id);
     await docRef.update({
-      autherId: memo.autherId,
-      title: memo.title,
-      body: memo.title,
-      isPublic: memo.isPublic,
-      attachments: memo.attachments,
+      autherId,
+      title,
+      body,
+      isPublic,
+      attachments,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
