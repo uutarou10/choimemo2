@@ -38,6 +38,8 @@ const _Login:React.SFC<PropTypes> = ({
     login(email, password);
   };
 
+  const isValid = () => email.includes('@') && email.length > 0 && password.length > 0;
+
   // ログイン済みの場合はmemosへリダイレクトする
   if (user) {
     return (
@@ -76,7 +78,7 @@ const _Login:React.SFC<PropTypes> = ({
         <Button
           type='submit'
           onClick={onSubmitHandler}
-          disabled={isLoginProcessing}
+          disabled={isLoginProcessing || !isValid()}
           loading={isLoginProcessing}
         >Login</Button>
       </Form>
