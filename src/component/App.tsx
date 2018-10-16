@@ -8,6 +8,7 @@ import { userLoggedIn, userLoggedOut } from '../module/user';
 import store, { history } from '../store';
 import { auth } from '../util/firebase';
 import Loader from './Loader';
+import Login from './Login';
 import Memo from './Memo';
 import MemoEditor from './MemoEditor';
 import MemoList from './MemoList';
@@ -36,6 +37,7 @@ export class _App extends React.Component<PropTypes> {
         <Container>
           <Switch>
             <Route exact={true} path="/" component={Top} />
+            <Route exact={true} path='/login' component={Login} />
             <Route exact={true} path='/memos' component={MemoList} />
             <Route exact={true} path='/memos/new' component={MemoEditor} />
             <Route exact={true} path='/memos/:id' component={Memo} />
