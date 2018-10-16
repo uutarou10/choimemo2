@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Dimmer, Loader, Segment} from 'semantic-ui-react';
 import { Memo } from 'src/model/memo';
 import { RootState } from 'src/module';
 import { fetchMemoList } from 'src/module/memoList';
@@ -32,7 +33,13 @@ class MemoList extends React.Component<PropTypes> {
       <div>
         <h2>Your memos</h2>
         <div>
-          {isFetching ? (undefined) : (
+          {isFetching ? (
+            <Segment vertical={true}>
+              <Dimmer active={true} inverted={true}>
+                <Loader inverted={true}>Loading</Loader>
+              </Dimmer>
+            </Segment>
+          ) : (
             memos.map(memo => <MemoListItem key={memo.id} memo={memo} />)
           )}
         </div>
