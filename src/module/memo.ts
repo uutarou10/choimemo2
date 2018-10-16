@@ -3,6 +3,7 @@ import { Dispatch } from 'redux';
 import { ActionType, createAction } from 'typesafe-actions';
 import { Memo } from '../model/memo';
 import memoStorage from '../util/storage/memo';
+import { addMemo } from './memoList';
 
 enum ActionTypes {
   START_FETCH_MEMO = 'START_FETCH_MEMO',
@@ -80,6 +81,7 @@ export const createMemo = (
         attachments
       );
       dispatch(finishCreateMemo(memo));
+      dispatch(addMemo(memo));
       dispatch(replace(`/memos/${memo.id}`));
       return;
   } catch (e) {
