@@ -33,80 +33,85 @@ interface PropTypes extends RouteComponentProps<{id?: string}> {
   togglePublic: () => any;
 }
 
-export const _MemoEditor: React.SFC<PropTypes> = (props) => {
-  const {
-    draftBody,
-    draftTitle,
-    isCreating,
-    draftIsPublic,
-    togglePublic,
-    user
-  } = props;
+class _MemoEditor extends React.Component<PropTypes> {
+  public render() {
+    const {
+      draftBody,
+      draftTitle,
+      isCreating,
+      draftIsPublic,
+      togglePublic,
+      user
+    } = this.props;
 
-  const isEditMode = !!props.match.params.id;
 
-  if (!user) {
-    return <Redirect to='/' push={false} />;
-  }
-
-  const onSubmitHandler = () => {
-    if (isEditMode) {
-      props.updateMemo(
-        props.match.params.id as string,
-        user.uid,
-        draftTitle,
-        draftBody,
-        draftIsPublic,
-        []
-      );
-    } else {
-      props.createMemo(
-        user.uid,
-        draftTitle,
-        draftBody,
-        draftIsPublic,
-        []
-      );
+    if (!user) {
+      return <Redirect to='/' push={false} />;
     }
-  };
 
-  return (
-    <div>
+    const onSubmitHandler = () => {
+      if (this.isEditMode()) {
+        this.props.updateMemo(
+          this.props.match.params.id as string,
+          user.uid,
+          draftTitle,
+          draftBody,
+          draftIsPublic,
+          []
+        );
+      } else {
+        this.props.createMemo(
+          user.uid,
+          draftTitle,
+          draftBody,
+          draftIsPublic,
+          []
+        );
+      }
+    };
+
+    return (
       <div>
-        <Input
-          onChange={props.editDraftTitle}
-          value={draftTitle}
-          placeholder='Title'
-          fluid={true}
-          disabled={isCreating}
-        />
-      </div>
-      <div>
-        <Form>
-          <TextArea
-            onChange={props.editDraftBody}
-            value={draftBody}
-            placeholder='Body'
-            fluid='true'
+        <div>
+          <Input
+            onChange={this.props.editDraftTitle}
+            value={draftTitle}
+            placeholder='Title'
+            fluid={true}
             disabled={isCreating}
           />
-        </Form>
+        </div>
+        <div>
+          <Form>
+            <TextArea
+              onChange={this.props.editDraftBody}
+              value={draftBody}
+              placeholder='Body'
+              fluid='true'
+              disabled={isCreating}
+            />
+          </Form>
+        </div>
+        <Checkbox
+          toggle={true}
+          label='公開する'
+          checked={draftIsPublic}
+          onClick={togglePublic}
+        />
+        <Button
+          onClick={onSubmitHandler}
+          primary={true}
+          loading={isCreating}
+          fluid={true}
+        >{this.isEditMode() ? '更新' : '作成'}</Button>
       </div>
-      <Checkbox
-        toggle={true}
-        label='公開する'
-        checked={draftIsPublic}
-        onClick={togglePublic}
-      />
-      <Button
-        onClick={onSubmitHandler}
-        primary={true}
-        loading={isCreating}
-        fluid={true}
-      >{isEditMode ? '更新' : '作成'}</Button>
-    </div>
-  );
-};
+    );
+  }
+
+  private isEditMode = ():boolean => {
+    return !!this.props.match.params.id;
+  }
+}
 
 const mapStateToProps = (state: RootState) => ({
   draftTitle: state.memo.draftTitle,
