@@ -1,168 +1,82 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { Dispatch } from 'redux';
 import { Button, Checkbox, Form, Input, TextArea } from 'semantic-ui-react';
-import { Memo } from 'src/model/memo';
-import User from 'src/model/user';
 import { RootState } from 'src/module';
-import { createMemo, editDraftBody, editDraftTitle, fetchMemo, toggleDraftPublic, updateMemo } from 'src/module/memo';
+import { editDraftBody, editDraftTitle, toggleDraftPublic } from 'src/module/memo';
 
-interface PropTypes extends RouteComponentProps<{id?: string}> {
-  draftTitle: string;
-  draftBody: string;
-  user?: User;
-  isCreating: boolean;
-  draftIsPublic: boolean;
-  isFetching: boolean;
-  memo: Memo;
+interface PropTypes {
+  // from parent component
+  buttonLabel: string;
 
-  createMemo: (
-    autherId: string,
-    title: string,
-    body: string,
-    isPublic: boolean,
-    attachments: string[]
-  ) => any;
-  updateMemo: (
-    id: string,
-    autherId: string,
-    title: string,
-    body: string,
-    isPublic: boolean,
-    attachments: string[]
-  ) => any;
-  editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => any;
-  editDraftBody: (body: React.ChangeEvent<HTMLTextAreaElement>) => any;
-  togglePublic: () => any;
-  fetchMemo: (id: string) => any;
+  onSubmit: () => any;
+
+  // from Redux state
+  title: string;
+  body: string;
+  isPublic: boolean;
+
+  editTitle: (e: React.ChangeEvent<HTMLInputElement>) => any;
+  editBody: (e: React.ChangeEvent<HTMLTextAreaElement>) => any;
+  toggleIsPublic: () => any;
 }
 
-class _MemoEditor extends React.Component<PropTypes> {
-  public componentDidMount() {
-    if (this.isEditMode()) {
-      fetchMemo(this.props.match.params.id as string);
-    }
-  }
+const _MemoEditor: React.SFC<PropTypes> = ({
+  title,
+  body,
+  isPublic,
+  buttonLabel,
 
-  public render() {
-    const {
-      draftBody,
-      draftTitle,
-      isCreating,
-      draftIsPublic,
-      togglePublic,
-      user,
-      isFetching,
-      // memo
-    } = this.props;
-
-    if (!user) {
-      return <Redirect to='/' push={false} />;
-    }
-
-    if (isFetching) {
-      // TODO: loadingの表示を出す
-      return <div />;
-    }
-
-    // if (!memo) {
-    //   return <div>Not found...</div>;
-    // }
-
-    const onSubmitHandler = () => {
-      if (this.isEditMode()) {
-        this.props.updateMemo(
-          this.props.match.params.id as string,
-          user.uid,
-          draftTitle,
-          draftBody,
-          draftIsPublic,
-          []
-        );
-      } else {
-        this.props.createMemo(
-          user.uid,
-          draftTitle,
-          draftBody,
-          draftIsPublic,
-          []
-        );
-      }
-    };
-
-    return (
+  editTitle,
+  editBody,
+  toggleIsPublic,
+  onSubmit
+}) => {
+  return (
+    <div>
       <div>
-        <div>
-          <Input
-            onChange={this.props.editDraftTitle}
-            value={draftTitle}
-            placeholder='Title'
-            fluid={true}
-            disabled={isCreating}
-          />
-        </div>
-        <div>
-          <Form>
-            <TextArea
-              onChange={this.props.editDraftBody}
-              value={draftBody}
-              placeholder='Body'
-              fluid='true'
-              disabled={isCreating}
-            />
-          </Form>
-        </div>
-        <Checkbox
-          toggle={true}
-          label='公開する'
-          checked={draftIsPublic}
-          onClick={togglePublic}
-        />
-        <Button
-          onClick={onSubmitHandler}
-          primary={true}
-          loading={isCreating}
+        <Input
+          onChange={editTitle}
+          value={title}
+          placeholder='Title'
           fluid={true}
-        >{this.isEditMode() ? '更新' : '作成'}</Button>
+        />
       </div>
-    );
-  }
-
-  private isEditMode = ():boolean => {
-    return !!this.props.match.params.id;
-  }
-}
+      <div>
+        <Form>
+          <TextArea
+            onChange={editBody}
+            value={body}
+            placeholder='Body'
+            fluid='true'
+          />
+        </Form>
+      </div>
+      <Checkbox
+        toggle={true}
+        label='公開する'
+        checked={isPublic}
+        onClick={toggleIsPublic}
+      />
+      <Button
+        onClick={onSubmit}
+        primary={true}
+        fluid={true}
+      >{buttonLabel}</Button>
+    </div>
+  );
+};
 
 const mapStateToProps = (state: RootState) => ({
-  draftTitle: state.memo.draftTitle,
-  draftBody: state.memo.draftBody,
-  isCreating: state.memo.isCreating,
-  draftIsPublic: state.memo.draftIsPublic,
-  user: state.user.user,
-  isFetching: state.memo.isFetching,
-  memo: state.memo.memo
+  title: state.memo.draftTitle,
+  body: state.memo.draftBody,
+  isPublic: state.memo.draftIsPublic
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
-  createMemo: (
-    autherId: string,
-    title: string,
-    body: string,
-    isPublic: boolean,
-    attachments: string[]
-  ) => dispatch(createMemo(autherId, title, body, isPublic, attachments)),
-  updateMemo: (
-    id: string,
-    autherId: string,
-    title: string,
-    body: string,
-    isPublic: boolean,
-    attachments: string[]
-  ) => dispatch(updateMemo(id, autherId, title, body, isPublic, attachments)),
-  editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => dispatch(editDraftTitle(event.target.value)),
-  editDraftBody: (event: React.ChangeEvent<HTMLTextAreaElement>) => dispatch(editDraftBody(event.target.value)),
-  togglePublic: () => dispatch(toggleDraftPublic()),
-  fetchMemo: (id: string) => dispatch(fetchMemo(id))
+const mapDispatchToPropr = (dispatch: Dispatch) => ({
+  editTitle: (e: React.ChangeEvent<HTMLInputElement>) => dispatch(editDraftTitle(e.target.value)),
+  editBody: (e: React.ChangeEvent<HTMLTextAreaElement>) => dispatch(editDraftBody(e.target.value)),
+  toggleIsPublic: () => dispatch(toggleDraftPublic())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(_MemoEditor);
+export default connect(mapStateToProps, mapDispatchToPropr)(_MemoEditor);
