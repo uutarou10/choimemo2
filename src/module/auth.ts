@@ -31,9 +31,13 @@ export const clearAuthError = createAction(ActionTypes.CLEAR_AUTH_ERROR, resolve
 ));
 
 // ログイン処理を行うthunk
-export const loginWithEmailAndPassword = (email: string, password: string) => (dispatch: Dispatch) =>{
+export const loginWithEmailAndPassword = (email: string, password: string) => (dispatch: Dispatch) => {
   dispatch(startLoginProcessing());
   auth.signInWithEmailAndPassword(email, password).catch(err => dispatch(authError(err)));
+};
+
+export const logout = () => (dispatch: Dispatch) => {
+  auth.signOut();
 };
 
 interface StateType {

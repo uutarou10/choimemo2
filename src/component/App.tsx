@@ -9,6 +9,7 @@ import store, { history } from '../store';
 import { auth } from '../util/firebase';
 import CreateMemo from './CreateMemo';
 import EditMemo from './EditMemo';
+import Header from './Header';
 import Loader from './Loader';
 import Login from './Login';
 import Memo from './Memo';
@@ -38,16 +39,19 @@ export const _App: React.SFC<PropTypes> = (props) => {
 
   return (
     <ConnectedRouter history={history}>
-      <Container>
-        <Switch>
-          <Route exact={true} path="/" component={Top} />
-          <Route exact={true} path='/login' component={Login} />
-          <Route exact={true} path='/memos' component={MemoList} />
-          <Route exact={true} path='/memos/new' component={CreateMemo} />
-          <Route exact={true} path='/memos/:id' component={Memo} />
-          <Route exact={true} path='/memos/:id/edit' component={EditMemo} />
-        </Switch>
-      </Container>
+      <div>
+        <Header />
+        <Container>
+          <Switch>
+            <Route exact={true} path="/" component={Top} />
+            <Route exact={true} path='/login' component={Login} />
+            <Route exact={true} path='/memos' component={MemoList} />
+            <Route exact={true} path='/memos/new' component={CreateMemo} />
+            <Route exact={true} path='/memos/:id' component={Memo} />
+            <Route exact={true} path='/memos/:id/edit' component={EditMemo} />
+          </Switch>
+        </Container>
+      </div>
     </ConnectedRouter>
   );
 };
