@@ -15,6 +15,7 @@ interface PropTypes {
   title: string;
   body: string;
   isPublic: boolean;
+  isCreating: boolean;
 
   editTitle: (e: React.ChangeEvent<HTMLInputElement>) => any;
   editBody: (e: React.ChangeEvent<HTMLTextAreaElement>) => any;
@@ -26,6 +27,7 @@ const _MemoEditor: React.SFC<PropTypes> = ({
   body,
   isPublic,
   buttonLabel,
+  isCreating,
 
   editTitle,
   editBody,
@@ -40,6 +42,7 @@ const _MemoEditor: React.SFC<PropTypes> = ({
           value={title}
           placeholder='Title'
           fluid={true}
+          disabled={isCreating}
         />
       </div>
       <div>
@@ -49,6 +52,7 @@ const _MemoEditor: React.SFC<PropTypes> = ({
             value={body}
             placeholder='Body'
             fluid='true'
+            disabled={isCreating}
           />
         </Form>
       </div>
@@ -57,11 +61,14 @@ const _MemoEditor: React.SFC<PropTypes> = ({
         label='公開する'
         checked={isPublic}
         onClick={toggleIsPublic}
+        disabled={isCreating}
       />
       <Button
         onClick={onSubmit}
         primary={true}
         fluid={true}
+        disabled={isCreating}
+        loading={isCreating}
       >{buttonLabel}</Button>
     </div>
   );
@@ -70,7 +77,8 @@ const _MemoEditor: React.SFC<PropTypes> = ({
 const mapStateToProps = (state: RootState) => ({
   title: state.memo.draftTitle,
   body: state.memo.draftBody,
-  isPublic: state.memo.draftIsPublic
+  isPublic: state.memo.draftIsPublic,
+  isCreating: state.memo.isCreating
 });
 
 const mapDispatchToPropr = (dispatch: Dispatch) => ({
