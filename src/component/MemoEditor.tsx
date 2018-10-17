@@ -2,9 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { Button, Checkbox, Form, Input, TextArea } from 'semantic-ui-react';
+import { Memo } from 'src/model/memo';
 import User from 'src/model/user';
 import { RootState } from 'src/module';
-import { createMemo, editDraftBody, editDraftTitle, toggleDraftPublic, updateMemo } from 'src/module/memo';
+import { createMemo, editDraftBody, editDraftTitle, fetchMemo, toggleDraftPublic, updateMemo } from 'src/module/memo';
 
 interface PropTypes extends RouteComponentProps<{id?: string}> {
   draftTitle: string;
@@ -12,6 +13,8 @@ interface PropTypes extends RouteComponentProps<{id?: string}> {
   user?: User;
   isCreating: boolean;
   draftIsPublic: boolean;
+  isFetching: boolean;
+  memo: Memo;
 
   createMemo: (
     autherId: string,
@@ -31,9 +34,16 @@ interface PropTypes extends RouteComponentProps<{id?: string}> {
   editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => any;
   editDraftBody: (body: React.ChangeEvent<HTMLTextAreaElement>) => any;
   togglePublic: () => any;
+  fetchMemo: (id: string) => any;
 }
 
 class _MemoEditor extends React.Component<PropTypes> {
+  public componentDidMount() {
+    if (this.isEditMode()) {
+      fetchMemo(this.props.match.params.id as string);
+    }
+  }
+
   public render() {
     const {
       draftBody,
@@ -41,13 +51,23 @@ class _MemoEditor extends React.Component<PropTypes> {
       isCreating,
       draftIsPublic,
       togglePublic,
-      user
+      user,
+      isFetching,
+      // memo
     } = this.props;
-
 
     if (!user) {
       return <Redirect to='/' push={false} />;
     }
+
+    if (isFetching) {
+      // TODO: loadingの表示を出す
+      return <div />;
+    }
+
+    // if (!memo) {
+    //   return <div>Not found...</div>;
+    // }
 
     const onSubmitHandler = () => {
       if (this.isEditMode()) {
@@ -118,7 +138,9 @@ const mapStateToProps = (state: RootState) => ({
   draftBody: state.memo.draftBody,
   isCreating: state.memo.isCreating,
   draftIsPublic: state.memo.draftIsPublic,
-  user: state.user.user
+  user: state.user.user,
+  isFetching: state.memo.isFetching,
+  memo: state.memo.memo
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -139,7 +161,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   ) => dispatch(updateMemo(id, autherId, title, body, isPublic, attachments)),
   editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => dispatch(editDraftTitle(event.target.value)),
   editDraftBody: (event: React.ChangeEvent<HTMLTextAreaElement>) => dispatch(editDraftBody(event.target.value)),
-  togglePublic: () => dispatch(toggleDraftPublic())
+  togglePublic: () => dispatch(toggleDraftPublic()),
+  fetchMemo: (id: string) => dispatch(fetchMemo(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(_MemoEditor);
