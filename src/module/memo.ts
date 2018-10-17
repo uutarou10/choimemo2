@@ -89,6 +89,33 @@ export const createMemo = (
   }
 });
 
+export const updateMemo = (
+  id:string,
+  autherId: string,
+  title: string,
+  body: string,
+  isPublic: boolean,
+  attachments: string[]
+) => (async (dispatch: Dispatch) => {
+    dispatch(startCreateMemo());
+    try {
+      const memo = await memoStorage.update(
+        id,
+        autherId,
+        title,
+        body,
+        isPublic,
+        attachments
+      );
+      dispatch(finishCreateMemo(memo));
+      dispatch(addMemo(memo));
+      dispatch(replace(`/memos/${memo.id}`));
+      return;
+  } catch (e) {
+    return dispatch(failureCreateMemo(e));
+  }
+});
+
 interface StateType {
   memo: Memo | null;
   isFetching: boolean;
@@ -132,6 +159,9 @@ export default (state: StateType = defaultState, action: Actions) => {
       return {
         ...state,
         memo: action.payload,
+        draftTitle: action.payload.title,
+        draftBody: action.payload.body,
+        draftIsPublic: action.payload.isPublic,
         isFetching: false
       };
 

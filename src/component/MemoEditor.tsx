@@ -1,60 +1,45 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { Dispatch } from 'redux';
 import { Button, Checkbox, Form, Input, TextArea } from 'semantic-ui-react';
-import User from 'src/model/user';
 import { RootState } from 'src/module';
-import { createMemo, editDraftBody, editDraftTitle, toggleDraftPublic } from 'src/module/memo';
+import { editDraftBody, editDraftTitle, toggleDraftPublic } from 'src/module/memo';
 
-interface PropTypes extends RouteComponentProps<{id?: string}> {
-  draftTitle: string;
-  draftBody: string;
-  user?: User;
+interface PropTypes {
+  // from parent component
+  buttonLabel: string;
+
+  onSubmit: () => any;
+
+  // from Redux state
+  title: string;
+  body: string;
+  isPublic: boolean;
   isCreating: boolean;
-  draftIsPublic: boolean;
 
-  createMemo: (
-    autherId: string,
-    title: string,
-    body: string,
-    isPublic: boolean,
-    attachments: string[]
-  ) => any;
-  editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => any;
-  editDraftBody: (body: React.ChangeEvent<HTMLTextAreaElement>) => any;
-  togglePublic: () => any;
+  editTitle: (e: React.ChangeEvent<HTMLInputElement>) => any;
+  editBody: (e: React.ChangeEvent<HTMLTextAreaElement>) => any;
+  toggleIsPublic: () => any;
 }
 
-export const _MemoEditor: React.SFC<PropTypes> = (props) => {
-  const {
-    draftBody,
-    draftTitle,
-    isCreating,
-    draftIsPublic,
-    togglePublic,
-    user
-  } = props;
+const _MemoEditor: React.SFC<PropTypes> = ({
+  title,
+  body,
+  isPublic,
+  buttonLabel,
+  isCreating,
 
-  if (!user) {
-    return <Redirect to='/' push={false} />;
-  }
-
-  const onSubmitHandler = () => {
-    props.createMemo(
-      user.uid,
-      draftTitle,
-      draftBody,
-      draftIsPublic,
-      []
-    );
-  };
-
+  editTitle,
+  editBody,
+  toggleIsPublic,
+  onSubmit
+}) => {
   return (
     <div>
       <div>
         <Input
-          onChange={props.editDraftTitle}
-          value={draftTitle}
+          onChange={editTitle}
+          value={title}
           placeholder='Title'
           fluid={true}
           disabled={isCreating}
@@ -63,10 +48,10 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
       <div>
         <Form>
           <TextArea
-            onChange={props.editDraftBody}
-            value={draftBody}
+            onChange={editBody}
+            value={body}
             placeholder='Body'
-            fluid={true}
+            fluid='true'
             disabled={isCreating}
           />
         </Form>
@@ -74,38 +59,32 @@ export const _MemoEditor: React.SFC<PropTypes> = (props) => {
       <Checkbox
         toggle={true}
         label='公開する'
-        checked={draftIsPublic}
-        onClick={togglePublic}
+        checked={isPublic}
+        onClick={toggleIsPublic}
+        disabled={isCreating}
       />
       <Button
-        onClick={onSubmitHandler}
+        onClick={onSubmit}
         primary={true}
-        loading={isCreating}
         fluid={true}
-      >作成</Button>
+        disabled={isCreating}
+        loading={isCreating}
+      >{buttonLabel}</Button>
     </div>
   );
 };
 
 const mapStateToProps = (state: RootState) => ({
-  draftTitle: state.memo.draftTitle,
-  draftBody: state.memo.draftBody,
-  isCreating: state.memo.isCreating,
-  draftIsPublic: state.memo.draftIsPublic,
-  user: state.user.user
+  title: state.memo.draftTitle,
+  body: state.memo.draftBody,
+  isPublic: state.memo.draftIsPublic,
+  isCreating: state.memo.isCreating
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
-  createMemo: (
-    autherId: string,
-    title: string,
-    body: string,
-    isPublic: boolean,
-    attachments: string[]
-  ) => dispatch(createMemo(autherId, title, body, isPublic, attachments)),
-  editDraftTitle: (event: React.ChangeEvent<HTMLInputElement>) => dispatch(editDraftTitle(event.target.value)),
-  editDraftBody: (event: React.ChangeEvent<HTMLTextAreaElement>) => dispatch(editDraftBody(event.target.value)),
-  togglePublic: () => dispatch(toggleDraftPublic())
+const mapDispatchToPropr = (dispatch: Dispatch) => ({
+  editTitle: (e: React.ChangeEvent<HTMLInputElement>) => dispatch(editDraftTitle(e.target.value)),
+  editBody: (e: React.ChangeEvent<HTMLTextAreaElement>) => dispatch(editDraftBody(e.target.value)),
+  toggleIsPublic: () => dispatch(toggleDraftPublic())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(_MemoEditor);
+export default connect(mapStateToProps, mapDispatchToPropr)(_MemoEditor);
