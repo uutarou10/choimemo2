@@ -159,6 +159,9 @@ export default (state: StateType = defaultState, action: Actions) => {
       return {
         ...state,
         memo: action.payload,
+        draftTitle: action.payload.title,
+        draftBody: action.payload.body,
+        draftIsPublic: action.payload.isPublic,
         isFetching: false
       };
 

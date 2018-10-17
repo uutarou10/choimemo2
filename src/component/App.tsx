@@ -8,10 +8,10 @@ import { userLoggedIn, userLoggedOut } from '../module/user';
 import store, { history } from '../store';
 import { auth } from '../util/firebase';
 import CreateMemo from './CreateMemo';
+import EditMemo from './EditMemo';
 import Loader from './Loader';
 import Login from './Login';
 import Memo from './Memo';
-import MemoEditor from './MemoEditor';
 import MemoList from './MemoList';
 import Top from './Top';
 
@@ -45,7 +45,7 @@ export const _App: React.SFC<PropTypes> = (props) => {
           <Route exact={true} path='/memos' component={MemoList} />
           <Route exact={true} path='/memos/new' component={CreateMemo} />
           <Route exact={true} path='/memos/:id' component={Memo} />
-          <Route exact={true} path='/memos/:id/edit' component={MemoEditor} />
+          <Route exact={true} path='/memos/:id/edit' component={EditMemo} />
         </Switch>
       </Container>
     </ConnectedRouter>
