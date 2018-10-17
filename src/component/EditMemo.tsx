@@ -13,7 +13,7 @@ interface PropTypes extends RouteComponentProps<{id?: string}> {
 
 class _EditMemo extends React.Component<PropTypes> {
   public componentDidMount() {
-    this.props.fetchMemo(this.props.match.params.id);
+    this.props.fetchMemo(this.props.match.params.id as string);
   }
 
   public render() {
@@ -38,3 +38,5 @@ class _EditMemo extends React.Component<PropTypes> {
     //
   }
 }
+
+export default _EditMemo;
